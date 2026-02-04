@@ -239,8 +239,8 @@ export default function WithdrawalsPage() {
                   key={mont}
                   onClick={() => setAmount(mont.toString())}
                   className={`relative overflow-hidden rounded-md p-1.5 transition-all duration-200 group ${isSelected
-                      ? 'bg-opacity-20 translate-y-0 scale-105'
-                      : 'bg-opacity-10 hover:bg-opacity-20 hover:-translate-y-0.5'
+                    ? 'bg-opacity-20 translate-y-0 scale-105'
+                    : 'bg-opacity-10 hover:bg-opacity-20 hover:-translate-y-0.5'
                     }`}
                   style={{
                     backgroundColor: isSelected ? `${colorCode}33` : '#0f172a',
@@ -248,20 +248,13 @@ export default function WithdrawalsPage() {
                     boxShadow: isSelected ? `0 0 8px ${colorCode}44` : 'none'
                   }}
                 >
-                  <div className="relative z-10 flex flex-col items-center justify-center space-y-0.5">
+                  <div className="relative z-10 flex flex-col items-center justify-center h-full">
                     {/* Monto Principal */}
                     <div
                       className="text-xs font-black tracking-tight"
                       style={{ color: isSelected ? '#fff' : colorCode }}
                     >
                       {mont >= 1000 ? `${(mont / 1000)}k` : mont}
-                    </div>
-
-                    {/* Monto Final Ultra Compacto */}
-                    <div className="flex flex-col items-center leading-none">
-                      <span className="text-[9px] font-bold text-white/90">
-                        {finalAmount.toFixed(0)}
-                      </span>
                     </div>
                   </div>
                 </button>
