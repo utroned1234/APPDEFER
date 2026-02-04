@@ -24,6 +24,14 @@ const PRIZES: Prize[] = [
   { text: "1000 Bs", color: "#ffff00", glow: "#ffff00", blocked: true, value: 1000 },
 ];
 
+interface RouletteHistory {
+  id: string;
+  package_name: string;
+  investment_bs: number;
+  won_bs: number;
+  spun_at: string;
+}
+
 interface RouletteData {
   can_spin: boolean;
   spins_available: number;
@@ -32,6 +40,7 @@ interface RouletteData {
     package_name: string;
     investment_bs: number;
   }>;
+  history: RouletteHistory[];
   total_winnings: number;
   min_investment: number;
 }
@@ -506,11 +515,55 @@ export default function RouletteWheel() {
               Presiona <span className="text-gold font-bold">SPIN</span> o la tecla <span className="text-gold font-bold">ESPACIO</span> para girar
             </p>
             <div className="flex justify-center gap-4 text-[10px] text-text-secondary">
-              <span>🎯 Premios de 5 a 300 Bs</span>
               <span>🍀 ¡Buena suerte!</span>
             </div>
           </div>
         </Card>
+
+        {/* Historial de premios */}
+        {!loading && rouletteData?.history && rouletteData.history.length > 0 && (
+          <Card className="!p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold" style={{ color: '#00ffff' }}>Historial de premios</h3>
+              <span
+                className="text-xs font-bold px-2 py-1 rounded-full"
+                style={{
+                  background: 'rgba(0, 255, 136, 0.1)',
+                  border: '1px solid rgba(0, 255, 136, 0.3)',
+                  color: '#00ff88',
+                }}
+              >
+                Total: Bs {rouletteData.total_winnings}
+              </span>
+            </div>
+            <div className="space-y-2">
+              {rouletteData.history.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between py-2 px-3 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
+                  }}
+                >
+                  <div>
+                    <p className="text-xs font-medium text-text-primary">{item.package_name}</p>
+                    <p className="text-[10px] text-text-secondary">
+                      {new Date(item.spun_at).toLocaleDateString('es-BO', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                  <span className="text-sm font-bold" style={{ color: '#00ff88' }}>
+                    +{item.won_bs} Bs
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
 
       <BottomNav />

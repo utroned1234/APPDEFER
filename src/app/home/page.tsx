@@ -85,7 +85,6 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null)
   const [missingToken, setMissingToken] = useState(false)
   const [showAnnouncements, setShowAnnouncements] = useState(false)
-  const [showAboutUs, setShowAboutUs] = useState(false)
   const [activating, setActivating] = useState(false)
   const [canActivate, setCanActivate] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
@@ -832,23 +831,21 @@ export default function HomePage() {
       </div >
 
       <p className="mt-6 text-xs text-text-secondary text-center">
-        © 2026 SmartHogar. Todos los derechos reservados por SmartHogar.
+        © 2026 TEKNOLAPP. Todos los derechos reservados.
       </p>
 
       {/* Botón flotante - WhatsApp */}
-      {whatsappNumber && (
-        <a
-          href={`https://wa.me/${whatsappNumber}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed bottom-24 right-2 z-40 w-12 h-12 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center text-white hover:scale-110 transition-transform duration-300 shadow-green-500/30"
-          title="Contactar soporte vía WhatsApp"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-          </svg>
-        </a>
-      )}
+      <a
+        href={`https://wa.me/${whatsappNumber || '59162464000'}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-24 right-2 z-40 w-12 h-12 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center text-white hover:scale-110 transition-transform duration-300 shadow-green-500/30"
+        title="Contactar soporte vía WhatsApp"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+      </a>
 
       {/* Modal - Foto de Perfil */}
       {showPhotoModal && (
@@ -913,154 +910,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Modal - Sobre Nosotros */}
-      {showAboutUs && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex flex-col">
-          {/* Overlay para cerrar */}
-          <div className="absolute inset-0" onClick={() => setShowAboutUs(false)} />
-
-          {/* Contenedor del modal con scroll */}
-          <div className="relative z-10 flex-1 overflow-y-auto p-4">
-            <div className="max-w-lg w-full mx-auto my-4">
-              <Card glassEffect>
-                <div className="space-y-5">
-                  {/* Botón cerrar en esquina */}
-                  <div className="flex justify-end sticky top-0 bg-dark-card z-10 -mt-2 -mr-2 pt-2 pr-2">
-                    <button
-                      onClick={() => setShowAboutUs(false)}
-                      className="text-text-secondary hover:text-gold transition-colors text-base font-bold bg-dark-card rounded-full w-8 h-8 flex items-center justify-center"
-                    >
-                      ✕
-                    </button>
-                  </div>
-
-                  {/* FOTO DEL FUNDADOR - PARTE SUPERIOR */}
-                  <div className="flex flex-col items-center -mt-2">
-                    <div className="w-32 h-32 rounded-full border-4 border-gold overflow-hidden shadow-lg shadow-gold/30">
-                      <img
-                        src="https://i.ibb.co/pBLTkVdb/Gemini-Generated-Image-cykwu6cykwu6cykw.png"
-                        alt="Lawrence Miller - CEO SmartHogar"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=Lawrence+Miller&background=d4af37&color=1a1a2e&size=128&bold=true'
-                        }}
-                      />
-                    </div>
-                    <h3 className="text-gold font-bold text-base mt-3">Lawrence Miller</h3>
-                    <p className="text-text-secondary text-sm">CEO & Fundador</p>
-                  </div>
-
-                  {/* Título de la empresa */}
-                  <div className="text-center border-b border-gold/20 pb-4">
-                    <h2 className="text-sm font-bold text-gold gold-glow">SmartHogar</h2>
-                    <p className="text-xs text-text-secondary mt-1">Importadora y Distribuidora Internacional</p>
-                    <p className="text-xs text-gold/70 mt-1">Constituida en Florida, Estados Unidos</p>
-                  </div>
-
-                  {/* Contenido */}
-                  <div className="space-y-4">
-                    <div className="bg-dark-card bg-opacity-50 rounded-lg p-4 border border-gold/20">
-                      <h3 className="text-gold font-bold mb-2">¿Quiénes Somos?</h3>
-                      <p className="text-text-secondary text-sm leading-relaxed">
-                        SmartHogar es una empresa <span className="text-gold font-bold">legalmente constituida en el estado de Florida, Estados Unidos</span>,
-                        dedicada a la importación y distribución de productos para el hogar en toda Latinoamérica.
-                        Con más de <span className="text-gold font-bold">8 años de experiencia</span> en el mercado internacional,
-                        trabajamos directamente con proveedores de Asia, Europa y Estados Unidos.
-                      </p>
-                    </div>
-
-                    <div className="bg-dark-card bg-opacity-50 rounded-lg p-4 border border-gold/20">
-                      <h3 className="text-gold font-bold mb-2">Nuestro Modelo de Negocio</h3>
-                      <p className="text-text-secondary text-sm leading-relaxed">
-                        Como empresa importadora registrada en EE.UU., compramos productos en grandes volúmenes
-                        directamente de fábrica, obteniendo los mejores precios del mercado. Luego distribuimos
-                        estos productos en toda Latinoamérica a través de nuestra red establecida.
-                      </p>
-                      <p className="text-text-secondary text-sm leading-relaxed mt-2">
-                        Recientemente, abrimos una <span className="text-gold font-bold">oportunidad de participación</span> para
-                        personas que desean invertir con nosotros. El capital aportado aumenta nuestra capacidad
-                        de importación, y a cambio, compartimos un porcentaje de las ganancias generadas por
-                        las ventas.
-                      </p>
-                    </div>
-
-                    <div className="bg-dark-card bg-opacity-50 rounded-lg p-4 border border-gold/20">
-                      <h3 className="text-gold font-bold mb-2">¿Por qué confiar en nosotros?</h3>
-                      <ul className="text-text-secondary text-sm space-y-2">
-                        <li className="flex items-start gap-2">
-                          <span className="text-gold">•</span>
-                          <span>Empresa constituida legalmente en Florida, USA</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-gold">•</span>
-                          <span>Más de 8 años de operación continua en el mercado</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-gold">•</span>
-                          <span>Red de distribución en múltiples países de LATAM</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-gold">•</span>
-                          <span>Tienda con productos disponibles para verificación</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-gold">•</span>
-                          <span>Pagos puntuales y transparencia total</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="bg-dark-card bg-opacity-50 rounded-lg p-4 border border-gold/20">
-                      <h3 className="text-gold font-bold mb-2">Misión</h3>
-                      <p className="text-text-secondary text-sm leading-relaxed">
-                        Facilitar el acceso a productos de calidad a precios competitivos, generando
-                        oportunidades reales de crecimiento económico para quienes confían en nuestro proyecto.
-                      </p>
-                    </div>
-
-                    <div className="bg-dark-card bg-opacity-50 rounded-lg p-4 border border-gold/20">
-                      <h3 className="text-gold font-bold mb-2">Visión</h3>
-                      <p className="text-text-secondary text-sm leading-relaxed">
-                        Ser la importadora de referencia en Latinoamérica, reconocida por la calidad
-                        de nuestros productos y la seriedad de nuestras operaciones comerciales.
-                      </p>
-                    </div>
-
-                    {/* Datos destacados */}
-                    <div className="grid grid-cols-2 gap-2 pt-2">
-                      <div className="text-center bg-gold/10 rounded-lg p-3 border border-gold/30">
-                        <p className="text-base font-bold text-gold">+8 años</p>
-                        <p className="text-[10px] text-text-secondary uppercase">En el mercado</p>
-                      </div>
-                      <div className="text-center bg-gold/10 rounded-lg p-3 border border-gold/30">
-                        <p className="text-base font-bold text-gold">USA</p>
-                        <p className="text-[10px] text-text-secondary uppercase">Sede en Florida</p>
-                      </div>
-                      <div className="text-center bg-gold/10 rounded-lg p-3 border border-gold/30">
-                        <p className="text-base font-bold text-gold">LATAM</p>
-                        <p className="text-[10px] text-text-secondary uppercase">Distribución</p>
-                      </div>
-                      <div className="text-center bg-gold/10 rounded-lg p-3 border border-gold/30">
-                        <p className="text-base font-bold text-gold">24/7</p>
-                        <p className="text-[10px] text-text-secondary uppercase">Soporte</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Botón cerrar */}
-                  <Button
-                    variant="primary"
-                    className="w-full"
-                    onClick={() => setShowAboutUs(false)}
-                  >
-                    Cerrar
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Modal de Calificación de Tarea */}
       {showTaskModal && selectedTask && (
