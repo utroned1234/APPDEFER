@@ -5,9 +5,10 @@ interface CardProps {
   className?: string
   title?: string
   subtitle?: string
+  glassEffect?: boolean
 }
 
-export default function Card({ children, className = '', title, subtitle }: CardProps) {
+export default function Card({ children, className = '', title, subtitle, glassEffect: _glassEffect }: CardProps) {
   return (
     <div
       className={`futuristic-card relative overflow-hidden ${className}`}
