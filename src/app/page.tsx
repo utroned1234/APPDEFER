@@ -6,7 +6,7 @@ export default function WelcomePage() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6">
       <div className="max-w-md w-full space-y-8 text-center">
         <div className="space-y-6">
-          {/* Logo SVG de TECNOLAPP */}
+          {/* Logo SVG de TEKNOLAPP */}
           <svg width="120" height="120" viewBox="0 0 100 120" className="mx-auto">
             <defs>
               <linearGradient id="logoGradMain" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -28,11 +28,8 @@ export default function WelcomePage() {
           </svg>
 
           <h1 className="text-5xl font-bold text-gold uppercase tracking-widest text-center" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            TECNOLAPP
+            TEKNOLAPP
           </h1>
-          <p className="text-sm text-text-secondary font-light tracking-wider">
-            Sistema Futurista de Inversiones
-          </p>
         </div>
 
         <div className="space-y-4 pt-4">
@@ -53,7 +50,7 @@ export default function WelcomePage() {
           Tu camino hacia el éxito financiero
         </p>
       </div>
-      <p className="mt-8 text-xs text-text-secondary">© 2026 TecnolaApp. Todos los derechos reservados.</p>
+      <p className="mt-8 text-xs text-text-secondary">© 2026 TeknolaApp. Todos los derechos reservados.</p>
     </div>
   )
 }

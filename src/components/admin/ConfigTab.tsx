@@ -30,6 +30,7 @@ export default function ConfigTab({ token }: ConfigTabProps) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState<string | null>(null)
   const [globalQr, setGlobalQr] = useState('')
+  const [whatsappNumber, setWhatsappNumber] = useState('')
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -41,11 +42,14 @@ export default function ConfigTab({ token }: ConfigTabProps) {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const [pkgRes, bonusRes] = await Promise.all([
+      const [pkgRes, bonusRes, configRes] = await Promise.all([
         fetch('/api/admin/vip-packages', {
           headers: { Authorization: `Bearer ${token}` },
         }),
         fetch('/api/admin/bonus-rules', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch('/api/admin/config', {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ])
@@ -60,6 +64,10 @@ export default function ConfigTab({ token }: ConfigTabProps) {
         const bonusData = await bonusRes.json()
         console.log('Bonos cargados:', bonusData)
         setBonusRules(bonusData)
+      }
+      if (configRes.ok) {
+        const configData = await configRes.json()
+        setWhatsappNumber(configData.whatsapp_number || '')
       }
     } catch (error) {
       console.error('Error fetching config:', error)
@@ -110,6 +118,31 @@ export default function ConfigTab({ token }: ConfigTabProps) {
         fetchData()
       } else {
         showToast('Error al actualizar el QR', 'error')
+      }
+    } catch (error) {
+      showToast('Error de conexión', 'error')
+    } finally {
+      setSaving(null)
+    }
+  }
+
+  const updateWhatsappNumber = async () => {
+    setSaving('whatsapp')
+    try {
+      const res = await fetch('/api/admin/config', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ whatsapp_number: whatsappNumber }),
+      })
+
+      if (res.ok) {
+        showToast('Número de WhatsApp actualizado', 'success')
+        fetchData()
+      } else {
+        showToast('Error al actualizar', 'error')
       }
     } catch (error) {
       showToast('Error de conexión', 'error')
@@ -388,6 +421,32 @@ export default function ConfigTab({ token }: ConfigTabProps) {
               className="w-full"
             >
               {saving === 'global-qr' ? 'Guardando...' : 'Actualizar QR global'}
+            </Button>
+          </div>
+        </Card>
+
+        <Card className="bg-dark-bg mt-4">
+          <div className="space-y-3">
+            <p className="text-sm text-text-secondary">
+              Número de WhatsApp para el botón flotante en Home (incluye código de país sin +).
+            </p>
+            <p className="text-xs text-gold/70">
+              Ejemplos: 59162464000 (Bolivia), 5491112345678 (Argentina), 12025551234 (USA)
+            </p>
+            <input
+              type="text"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value.replace(/[^0-9]/g, ''))}
+              className="w-full px-3 py-2 bg-dark-bg border border-gold border-opacity-30 rounded text-text-primary focus:outline-none focus:border-gold transition-all"
+              placeholder="Ej: 59162464000"
+            />
+            <Button
+              variant="primary"
+              onClick={updateWhatsappNumber}
+              disabled={saving === 'whatsapp'}
+              className="w-full"
+            >
+              {saving === 'whatsapp' ? 'Guardando...' : 'Actualizar WhatsApp'}
             </Button>
           </div>
         </Card>

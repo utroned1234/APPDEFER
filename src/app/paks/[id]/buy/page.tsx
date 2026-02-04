@@ -227,7 +227,7 @@ export default function BuyPackagePage() {
       </div>
 
       <p className="mt-6 text-xs text-text-secondary text-center">
-        © 2026 TecnolaApp. Todos los derechos reservados.
+        © 2026 TeknolaApp. Todos los derechos reservados.
       </p>
 
       <BottomNav />

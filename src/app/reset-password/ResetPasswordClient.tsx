@@ -110,7 +110,7 @@ export default function ResetPasswordClient() {
         </form>
 
         <p className="mt-8 text-xs text-text-secondary text-center">
-          © 2026 TecnolaApp. Todos los derechos reservados.
+          © 2026 TeknolaApp. Todos los derechos reservados.
         </p>
       </div>
     </div>

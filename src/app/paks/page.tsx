@@ -209,7 +209,7 @@ export default function PaksPage() {
       </div>
 
       <p className="mt-8 text-xs text-text-secondary text-center uppercase tracking-wider">
-        © 2026 TecnolaApp. Todos los derechos reservados.
+        © 2026 TeknolaApp. Todos los derechos reservados.
       </p>
 
       <BottomNav />

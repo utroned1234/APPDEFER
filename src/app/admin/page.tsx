@@ -90,6 +90,10 @@ interface ActiveUser {
       }>
       total: number
     }
+    rouletteWins: {
+      total: number
+      spins: number
+    }
     totalEarnings: number
   }
 }
@@ -1335,6 +1339,21 @@ export default function AdminPage() {
                                   </div>
                                 ))}
                               </div>
+                            </div>
+                          )}
+
+                          {/* 4. Ganancias de Ruleta */}
+                          {entry.earnings.rouletteWins && entry.earnings.rouletteWins.total > 0 && (
+                            <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="text-xs font-bold text-purple-400 uppercase">🎰 Ganancias de Ruleta</p>
+                                <p className="text-lg font-bold text-purple-400">
+                                  Bs {entry.earnings.rouletteWins.total.toFixed(2)}
+                                </p>
+                              </div>
+                              <p className="text-xs text-text-secondary">
+                                🎲 {entry.earnings.rouletteWins.spins} {entry.earnings.rouletteWins.spins === 1 ? 'giro realizado' : 'giros realizados'}
+                              </p>
                             </div>
                           )}
                         </div>

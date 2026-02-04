@@ -2,30 +2,78 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma, withRetry } from '@/lib/db'
 import { requireAuth } from '@/lib/auth/middleware'
 
-// Función para verificar si el usuario ya activó hoy
-function canActivateToday(lastActivation: Date | null): { canActivate: boolean; unlocksAt: Date | null } {
+// La activación depende SOLO de las tareas completadas
+// El admin controla cuándo se pueden activar subiendo nuevas imágenes de tareas
+
+// Función auxiliar para verificar si el usuario completó todas las tareas actuales
+async function hasCompletedAllTasks(userId: string): Promise<boolean> {
+  // Obtener todas las tareas activas
+  const tasks = await prisma.dailyTask.findMany({
+    where: { is_active: true },
+  })
+
+  if (tasks.length === 0) {
+    // Si no hay tareas, puede activar directamente
+    return true
+  }
+
+  // Verificar que haya completado cada tarea DESPUÉS de su última actualización
+  for (const task of tasks) {
+    const completion = await prisma.taskCompletion.findFirst({
+      where: {
+        user_id: userId,
+        task_id: task.id,
+        completed_at: { gt: task.updated_at },
+      },
+    })
+
+    if (!completion) {
+      return false
+    }
+  }
+
+  return true
+}
+
+// Función para verificar si ya activó con las tareas actuales
+async function hasAlreadyActivatedForCurrentTasks(userId: string): Promise<boolean> {
+  // Obtener la tarea más recientemente actualizada
+  const latestTask = await prisma.dailyTask.findFirst({
+    where: { is_active: true },
+    orderBy: { updated_at: 'desc' },
+  })
+
+  if (!latestTask) {
+    // Si no hay tareas, verificar si activó hoy
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const todayActivation = await prisma.walletLedger.findFirst({
+      where: {
+        user_id: userId,
+        type: 'DAILY_PROFIT',
+        created_at: { gte: today },
+      },
+    })
+
+    return !!todayActivation
+  }
+
+  // Verificar si la última activación fue después de la última actualización de tareas
+  const lastActivation = await prisma.walletLedger.findFirst({
+    where: {
+      user_id: userId,
+      type: 'DAILY_PROFIT',
+    },
+    orderBy: { created_at: 'desc' },
+  })
+
   if (!lastActivation) {
-    return { canActivate: true, unlocksAt: null }
+    return false
   }
 
-  const now = new Date()
-  const lastRun = new Date(lastActivation)
-
-  // Calcular la próxima 1:00 AM después de la última activación
-  const unlockTime = new Date(lastRun)
-  unlockTime.setHours(1, 0, 0, 0) // Establecer a 1:00 AM
-
-  // Si la última activación fue después de la 1:00 AM de hoy, desbloquea mañana a la 1:00 AM
-  if (lastRun >= unlockTime) {
-    unlockTime.setDate(unlockTime.getDate() + 1)
-  }
-
-  // Si ahora es antes de la hora de desbloqueo, está bloqueado
-  if (now < unlockTime) {
-    return { canActivate: false, unlocksAt: unlockTime }
-  }
-
-  return { canActivate: true, unlocksAt: null }
+  // Si activó después de que se actualizaron las tareas, ya no puede activar
+  return lastActivation.created_at > latestTask.updated_at
 }
 
 export async function POST(req: NextRequest) {
@@ -38,7 +86,32 @@ export async function POST(req: NextRequest) {
     const userId = authResult.user.userId
     const now = new Date()
 
-    // Obtener el usuario con su última activación
+    // Verificar si ya activó para las tareas actuales
+    const alreadyActivated = await hasAlreadyActivatedForCurrentTasks(userId)
+    if (alreadyActivated) {
+      return NextResponse.json(
+        {
+          error: 'Ya activaste tus ganancias',
+          blocked: true,
+          message: '🎉 Felicitaciones, espera tu nueva tarea',
+        },
+        { status: 423 }
+      )
+    }
+
+    // Verificar si completó todas las tareas
+    const tasksCompleted = await hasCompletedAllTasks(userId)
+    if (!tasksCompleted) {
+      return NextResponse.json(
+        {
+          error: 'Debes completar todas las tareas primero',
+          blocked: true,
+        },
+        { status: 400 }
+      )
+    }
+
+    // Obtener el usuario con sus compras activas
     const user = await withRetry(() =>
       prisma.user.findUnique({
         where: { id: userId },
@@ -62,33 +135,6 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 })
-    }
-
-    // Buscar la última activación del usuario
-    const lastActivation = await withRetry(() =>
-      prisma.walletLedger.findFirst({
-        where: {
-          user_id: userId,
-          type: 'DAILY_PROFIT',
-        },
-        orderBy: { created_at: 'desc' },
-        select: { created_at: true },
-      })
-    )
-
-    // Verificar si puede activar hoy
-    const { canActivate, unlocksAt } = canActivateToday(lastActivation?.created_at || null)
-
-    if (!canActivate) {
-      return NextResponse.json(
-        {
-          error: 'Ya activaste tus ganancias hoy',
-          blocked: true,
-          unlocks_at: unlocksAt,
-          message: 'Disponible a la 1:00 AM',
-        },
-        { status: 423 } // 423 = Locked
-      )
     }
 
     // Verificar si tiene compras activas
@@ -130,7 +176,7 @@ export async function POST(req: NextRequest) {
             data: {
               last_profit_at: now,
               total_earned_bs: purchase.total_earned_bs + effectiveProfit,
-              daily_profit_bs: effectiveProfit, // Sincronizar con el porcentaje actual
+              daily_profit_bs: effectiveProfit,
             },
           })
 
@@ -140,19 +186,11 @@ export async function POST(req: NextRequest) {
       })
     )
 
-    // Calcular hora de desbloqueo (próxima 1:00 AM)
-    const unlockTime = new Date(now)
-    unlockTime.setHours(1, 0, 0, 0)
-    if (now >= unlockTime) {
-      unlockTime.setDate(unlockTime.getDate() + 1)
-    }
-
     return NextResponse.json({
       success: true,
-      message: 'Ganancias activadas exitosamente',
+      message: '🎉 Ganancias activadas exitosamente',
       total_profit: totalProfit,
       packages: processedPackages,
-      unlocks_at: unlockTime,
     })
   } catch (error) {
     console.error('Activate daily profit error:', error)
@@ -173,19 +211,14 @@ export async function GET(req: NextRequest) {
   try {
     const userId = authResult.user.userId
 
-    // Buscar la última activación del usuario
-    const lastActivation = await withRetry(() =>
-      prisma.walletLedger.findFirst({
-        where: {
-          user_id: userId,
-          type: 'DAILY_PROFIT',
-        },
-        orderBy: { created_at: 'desc' },
-        select: { created_at: true },
-      })
-    )
+    // Verificar si ya activó para las tareas actuales
+    const alreadyActivated = await hasAlreadyActivatedForCurrentTasks(userId)
 
-    const { canActivate, unlocksAt } = canActivateToday(lastActivation?.created_at || null)
+    // Verificar si completó todas las tareas
+    const tasksCompleted = await hasCompletedAllTasks(userId)
+
+    // Puede activar si: completó tareas Y no ha activado aún para estas tareas
+    const canActivate = tasksCompleted && !alreadyActivated
 
     // Contar compras activas del usuario
     const activeCount = await withRetry(() =>
@@ -196,8 +229,8 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       can_activate: canActivate,
-      last_activation: lastActivation?.created_at || null,
-      unlocks_at: unlocksAt,
+      tasks_completed: tasksCompleted,
+      already_activated: alreadyActivated,
       active_packages: activeCount,
     })
   } catch (error) {

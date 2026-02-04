@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
           const allLedgers = await prisma.walletLedger.findMany({
             where: {
               user_id: { in: userIds },
-              type: { in: ['DAILY_PROFIT', 'ADJUSTMENT', 'REFERRAL_BONUS'] },
+              type: { in: ['DAILY_PROFIT', 'ADJUSTMENT', 'REFERRAL_BONUS', 'ROULETTE_WIN'] as any },
             },
             select: {
               user_id: true,
@@ -118,6 +118,7 @@ export async function GET(req: NextRequest) {
             const dailyProfits = userLedgers.filter(l => l.type === 'DAILY_PROFIT')
             const manualAdjusts = userLedgers.filter(l => l.type === 'ADJUSTMENT')
             const referralBonuses = userLedgers.filter(l => l.type === 'REFERRAL_BONUS')
+            const rouletteWins = userLedgers.filter(l => (l.type as string) === 'ROULETTE_WIN')
 
             // Calcular total de ganancias diarias
             const totalDailyProfit = dailyProfits.reduce((sum, p) => sum + p.amount_bs, 0)
@@ -146,8 +147,12 @@ export async function GET(req: NextRequest) {
             }))
             const totalReferralBonus = referralBonuses.reduce((sum, b) => sum + b.amount_bs, 0)
 
+            // Calcular ganancias de ruleta
+            const totalRouletteWins = rouletteWins.reduce((sum, r) => sum + r.amount_bs, 0)
+            const rouletteSpins = rouletteWins.length
+
             // Total general
-            const totalEarnings = totalDailyProfit + totalAdjustments + totalReferralBonus
+            const totalEarnings = totalDailyProfit + totalAdjustments + totalReferralBonus + totalRouletteWins
 
             return {
               userId,
@@ -162,6 +167,10 @@ export async function GET(req: NextRequest) {
               referralBonus: {
                 byLevel: referralBonusByLevel,
                 total: totalReferralBonus,
+              },
+              rouletteWins: {
+                total: totalRouletteWins,
+                spins: rouletteSpins,
               },
               totalEarnings,
             }
@@ -178,6 +187,7 @@ export async function GET(req: NextRequest) {
         dailyProfit: { total: 0, days: 0 },
         adjustments: { items: [], total: 0 },
         referralBonus: { byLevel: [], total: 0 },
+        rouletteWins: { total: 0, spins: 0 },
         totalEarnings: 0,
       }
 

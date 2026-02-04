@@ -111,11 +111,12 @@ export default function SignupClient({
           />
 
           <Input
-            label="Usuario"
-            type="text"
+            label="Teléfono"
+            type="tel"
             required
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            placeholder="Ej: 70012345"
           />
 
           <Input
@@ -161,7 +162,7 @@ export default function SignupClient({
         </form>
       </div>
       <p className="mt-8 text-xs text-text-secondary">
-        © 2026 TecnolaApp. Todos los derechos reservados.
+        © 2026 TeknolaApp. Todos los derechos reservados.
       </p>
 
       {/* Modal de registro exitoso */}
@@ -177,7 +178,7 @@ export default function SignupClient({
 
               <div className="bg-dark-card border border-gold/30 rounded-lg p-4 space-y-3">
                 <div>
-                  <p className="text-xs text-text-secondary uppercase">Usuario</p>
+                  <p className="text-xs text-text-secondary uppercase">Teléfono</p>
                   <p className="text-gold font-bold text-lg">{createdCredentials.username}</p>
                 </div>
                 <div>
