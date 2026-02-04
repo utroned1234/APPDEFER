@@ -14,7 +14,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'TeknolaApp',
-  description: 'Plataforma TeknolaApp Premium - Sistema Futurista',
+  description: 'Plataforma TeknolaApp Premium - Sistema Futurista V2',
   icons: {
     icon: [
       {
