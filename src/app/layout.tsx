@@ -1,9 +1,16 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { ToastProvider } from '@/components/ui/Toast'
 import { ThemeProvider } from '@/context/ThemeContext'
 import CircuitBackground from '@/components/ui/CircuitBackground'
 import LogoutButton from '@/components/ui/LogoutButton'
+
+export const viewport: Viewport = {
+  themeColor: '#020409',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export const metadata: Metadata = {
   title: 'TeknolaApp',
@@ -23,12 +30,6 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.json',
-  themeColor: '#020409',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
