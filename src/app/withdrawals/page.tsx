@@ -195,7 +195,7 @@ export default function WithdrawalsPage() {
   ]
 
   const calculateFinalAmount = (amount: number) => {
-    const discount = amount * 0.15
+    const discount = amount * 0.12
     return amount - discount
   }
 
@@ -212,8 +212,8 @@ export default function WithdrawalsPage() {
             Retiros desde Bs 50. Pagos de lunes a viernes. Se acreditan de 24 a 72 horas
             despues de la solicitud.
           </p>
-          <p className="mt-2 text-[10px] text-red-400 font-semibold">
-            Se aplicara un 15% de descuento a toda la solicitud de pago.
+          <p className="mt-2 text-[10px] text-blue-400 font-semibold">
+            Se aplicara un 12% de descuento a toda la solicitud de pago.
           </p>
         </div>
 
@@ -316,19 +316,14 @@ export default function WithdrawalsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-text-secondary font-medium ml-1">Metodo de retiro</label>
-              <select
+              <Input
+                label="Numero de cuenta"
+                type="text"
                 value={payoutMethod}
                 onChange={(e) => setPayoutMethod(e.target.value)}
-                className="w-full bg-dark-bg border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors appearance-none"
+                placeholder="Ej: 100000..."
                 required
-              >
-                <option value="" disabled>Selecciona un metodo</option>
-                <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                <option value="QR Simple">QR Simple</option>
-                <option value="Tigo Money">Tigo Money</option>
-                <option value="USDT">USDT (Cripto)</option>
-              </select>
+              />
             </div>
 
             <Input
