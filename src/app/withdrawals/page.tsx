@@ -78,9 +78,9 @@ export default function WithdrawalsPage() {
     setError('')
 
     const amountNum = parseFloat(amount)
-    const allowedAmounts = [2000, 3000, 4000, 5000, 10000]
+    const allowedAmounts = [50, 300, 700, 1500, 2500, 5000]
     if (isNaN(amountNum) || !allowedAmounts.includes(amountNum)) {
-      setError('Solo se permiten retiros de Bs 2.000, 3.000, 4.000, 5.000 o 10.000')
+      setError('Solo se permiten retiros de Bs 50, 300, 700, 1.500, 2.500 o 5.000')
       return
     }
 
@@ -185,6 +185,20 @@ export default function WithdrawalsPage() {
     }
   }
 
+  const allowedAmounts = [
+    { amount: 50, color: 'from-cyan-500 to-blue-500' },
+    { amount: 300, color: 'from-purple-500 to-pink-500' },
+    { amount: 700, color: 'from-green-500 to-emerald-500' },
+    { amount: 1500, color: 'from-orange-500 to-red-500' },
+    { amount: 2500, color: 'from-yellow-500 to-amber-500' },
+    { amount: 5000, color: 'from-indigo-500 to-purple-500' },
+  ]
+
+  const calculateFinalAmount = (amount: number) => {
+    const discount = amount * 0.15
+    return amount - discount
+  }
+
   return (
     <div className="min-h-screen pb-20">
       <ScreenshotProtection />
@@ -195,31 +209,68 @@ export default function WithdrawalsPage() {
             Solicita tu retiro
           </p>
           <p className="mt-2 text-[10px] text-text-secondary">
-            Retiros desde Bs 2.000. Pagos de lunes a viernes. Se acreditan de 24 a 72 horas
+            Retiros desde Bs 50. Pagos de lunes a viernes. Se acreditan de 24 a 72 horas
             despues de la solicitud.
           </p>
-          <p className="mt-2 text-[10px] text-text-secondary">
-            Se aplicara un 10 % de descuento a toda la solicitud de pago.
+          <p className="mt-2 text-[10px] text-red-400 font-semibold">
+            Se aplicara un 15% de descuento a toda la solicitud de pago.
           </p>
         </div>
 
         <Card glassEffect>
-          <p className="text-xs font-semibold text-red-400 text-center mb-4">
-            Las solicitudes deben realizarse unicamente con montos exactos:
+          <p className="text-xs font-semibold text-gold text-center mb-4 uppercase tracking-wider">
+            💰 Montos Disponibles para Retiro
           </p>
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
-            {[2000, 3000, 4000, 5000, 10000].map((mont) => (
-              <button
-                key={mont}
-                onClick={() => setAmount(mont.toString())}
-                className={`px-3 py-2 text-xs font-semibold rounded border-2 transition-all ${amount === mont.toString()
-                  ? 'bg-gold text-black border-gold'
-                  : 'bg-transparent text-gold border-gold hover:bg-gold hover:text-black'
-                  }`}
-              >
-                {mont >= 1000 ? mont.toLocaleString('es-ES') : mont}
-              </button>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+            {allowedAmounts.map(({ amount: mont, color }) => {
+              const finalAmount = calculateFinalAmount(mont)
+              const isSelected = amount === mont.toString()
+
+              return (
+                <button
+                  key={mont}
+                  onClick={() => setAmount(mont.toString())}
+                  className={`relative overflow-hidden rounded-xl p-4 transition-all duration-300 transform hover:scale-105 ${isSelected
+                      ? 'ring-2 ring-gold shadow-lg shadow-gold/50'
+                      : 'hover:shadow-xl'
+                    }`}
+                  style={{
+                    background: isSelected
+                      ? `linear-gradient(135deg, ${color.split(' ')[0].replace('from-', '#')}, ${color.split(' ')[2].replace('to-', '#')})`
+                      : 'rgba(26, 26, 46, 0.6)',
+                    border: isSelected ? '2px solid #ffd700' : '2px solid rgba(255, 215, 0, 0.2)'
+                  }}
+                >
+                  <div className="relative z-10">
+                    <div className="text-center space-y-2">
+                      <div className="text-2xl font-black text-white">
+                        {mont >= 1000 ? `${(mont / 1000).toFixed(1)}K` : mont}
+                      </div>
+                      <div className="text-xs text-white/80 font-medium">
+                        Bs {mont.toLocaleString('es-ES')}
+                      </div>
+                      <div className="h-px bg-white/30 my-2"></div>
+                      <div className="text-xs text-white/90 font-semibold">
+                        Recibes:
+                      </div>
+                      <div className="text-lg font-bold text-white">
+                        Bs {finalAmount.toFixed(0)}
+                      </div>
+                      <div className="text-[10px] text-white/70">
+                        (-15% desc.)
+                      </div>
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2">
+                      <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
+                        <span className="text-black text-xs font-bold">✓</span>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              )
+            })}
           </div>
           <div className="text-center mb-6">
             <p className="text-sm text-text-secondary uppercase tracking-wider font-light mb-2">
@@ -366,7 +417,7 @@ export default function WithdrawalsPage() {
       </div>
 
       <p className="mt-6 text-xs text-text-secondary text-center">
-        © 2026 TecnolaApp. Todos los derechos reservados.
+        © 2026 TeknolaApp. Todos los derechos reservados.
       </p>
 
       <BottomNav />
