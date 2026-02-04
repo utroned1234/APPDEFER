@@ -6,19 +6,19 @@ import CircuitBackground from '@/components/ui/CircuitBackground'
 import LogoutButton from '@/components/ui/LogoutButton'
 
 export const metadata: Metadata = {
-  title: 'TecnolaApp',
-  description: 'Plataforma TecnolaApp Premium - Sistema Futurista',
+  title: 'TeknolaApp',
+  description: 'Plataforma TeknolaApp Premium - Sistema Futurista',
   icons: {
     icon: [
       {
-        url: 'https://i.ibb.co/35y8M1HR/vecteezy-online-store-with-smartphone-shop-concept-illustration-for-8480599.png',
-        type: 'image/png',
+        url: 'https://api.dicebear.com/7.x/shapes/svg?seed=teknolapp&backgroundColor=1a1a2e&shape1Color=33e6ff&shape2Color=00d9ff&shape3Color=33e6ff',
+        type: 'image/svg+xml',
       },
     ],
     apple: [
       {
-        url: 'https://i.ibb.co/35y8M1HR/vecteezy-online-store-with-smartphone-shop-concept-illustration-for-8480599.png',
-        type: 'image/png',
+        url: 'https://api.dicebear.com/7.x/shapes/svg?seed=teknolapp&backgroundColor=1a1a2e&shape1Color=33e6ff&shape2Color=00d9ff&shape3Color=33e6ff',
+        type: 'image/svg+xml',
       },
     ],
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'TecnolaApp',
+    title: 'TeknolaApp',
   },
 }
 
