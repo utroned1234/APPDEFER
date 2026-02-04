@@ -92,11 +92,25 @@ export default function CircuitBackground() {
 
   return (
     <>
+      {/* Imagen de fondo global */}
+      <div
+        className="fixed inset-0 z-[-1] pointer-events-none bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('https://i.ibb.co/7Jc7tLNy/unnamed.jpg')",
+          opacity: 0.4
+        }}
+      />
+      {/* Overlay oscuro para mezclar la imagen con el tema */}
+      <div
+        className="fixed inset-0 z-[-1] pointer-events-none"
+        style={{ backgroundColor: 'rgba(2, 4, 9, 0.85)' }}
+      />
+
       {/* Contenedor del circuito SVG */}
       <div
         ref={containerRef}
         className="fixed inset-0 z-0 pointer-events-none"
-        style={{ backgroundColor: '#020409' }}
+        style={{ backgroundColor: 'transparent' }} // Transparente para ver la imagen detrás
       />
 
       {/* Rayos de energía horizontales */}
