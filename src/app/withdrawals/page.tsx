@@ -221,7 +221,7 @@ export default function WithdrawalsPage() {
           <p className="text-[10px] font-bold text-gold text-center mb-4 uppercase tracking-[0.2em]">
             ⚡ Selecciona Monto (Bs) ⚡
           </p>
-          <div className="grid grid-cols-3 gap-2 mb-6">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-4">
             {allowedAmounts.map(({ amount: mont, color }) => {
               const finalAmount = calculateFinalAmount(mont)
               const isSelected = amount === mont.toString()
@@ -238,49 +238,32 @@ export default function WithdrawalsPage() {
                 <button
                   key={mont}
                   onClick={() => setAmount(mont.toString())}
-                  className={`relative overflow-hidden rounded-lg p-2 transition-all duration-300 group ${isSelected
-                      ? 'bg-opacity-20 translate-y-0'
+                  className={`relative overflow-hidden rounded-md p-1.5 transition-all duration-200 group ${isSelected
+                      ? 'bg-opacity-20 translate-y-0 scale-105'
                       : 'bg-opacity-10 hover:bg-opacity-20 hover:-translate-y-0.5'
                     }`}
                   style={{
                     backgroundColor: isSelected ? `${colorCode}33` : '#0f172a',
                     border: `1px solid ${isSelected ? colorCode : '#334155'}`,
-                    boxShadow: isSelected ? `0 0 10px ${colorCode}66` : 'none'
+                    boxShadow: isSelected ? `0 0 8px ${colorCode}44` : 'none'
                   }}
                 >
-                  <div className="relative z-10 flex flex-col items-center justify-center space-y-1">
+                  <div className="relative z-10 flex flex-col items-center justify-center space-y-0.5">
                     {/* Monto Principal */}
                     <div
-                      className="text-sm font-black tracking-tighter"
+                      className="text-xs font-black tracking-tight"
                       style={{ color: isSelected ? '#fff' : colorCode }}
                     >
                       {mont >= 1000 ? `${(mont / 1000)}k` : mont}
                     </div>
 
-                    {/* Línea divisoria futurista */}
-                    <div
-                      className="w-full h-[1px] opacity-30"
-                      style={{ background: `linear-gradient(90deg, transparent, ${colorCode}, transparent)` }}
-                    />
-
-                    {/* Monto Final Compacto */}
-                    <div className="flex flex-col items-center">
-                      <span className="text-[8px] text-gray-400 uppercase">Recibes</span>
-                      <span className="text-xs font-bold text-white leading-none">
+                    {/* Monto Final Ultra Compacto */}
+                    <div className="flex flex-col items-center leading-none">
+                      <span className="text-[9px] font-bold text-white/90">
                         {finalAmount.toFixed(0)}
                       </span>
                     </div>
                   </div>
-
-                  {/* Esquina decorativa (tech accent) */}
-                  <div
-                    className="absolute top-0 right-0 w-2 h-2 border-t border-r opacity-50"
-                    style={{ borderColor: colorCode }}
-                  />
-                  <div
-                    className="absolute bottom-0 left-0 w-2 h-2 border-b border-l opacity-50"
-                    style={{ borderColor: colorCode }}
-                  />
                 </button>
               )
             })}
