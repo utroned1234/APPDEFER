@@ -4,6 +4,8 @@ import { getSupabaseAdminClient } from '@/lib/supabaseClient'
 
 export const dynamic = 'force-dynamic'
 
+const BUCKET_NAME = 'Smart'
+
 export async function POST(req: NextRequest) {
   const authResult = requireAuth(req)
   if ('error' in authResult) {
@@ -30,33 +32,51 @@ export async function POST(req: NextRequest) {
       supabase = getSupabaseAdminClient()
     } catch (initError) {
       console.error('Supabase init error:', initError)
-      const placeholderUrl = 'https://via.placeholder.com/400x300/2B2B2B/C9A24D?text=Comprobante+Subido'
-      return NextResponse.json({
-        url: placeholderUrl,
-        warning: 'Storage no configurado. Se usó un placeholder.',
-      })
+      return NextResponse.json(
+        { error: 'Storage no configurado. Verifica las variables de entorno de Supabase.' },
+        { status: 500 }
+      )
     }
 
-    // Try to upload to Supabase Storage (bucket: Smart)
-    const { data, error } = await supabase.storage
-      .from('Smart')
+    // Intentar subir
+    let uploadResult = await supabase.storage
+      .from(BUCKET_NAME)
       .upload(filePath, buffer, {
         contentType: file.type,
         upsert: false,
       })
 
-    if (error) {
-      console.error('Supabase upload error:', error)
-
-      const placeholderUrl = 'https://via.placeholder.com/400x300/2B2B2B/C9A24D?text=Comprobante+Subido'
-      return NextResponse.json({
-        url: placeholderUrl,
-        warning: 'No se pudo subir el comprobante a Storage. Se usó un placeholder.',
+    // Si el bucket no existe, intentar crearlo
+    if (uploadResult.error && (uploadResult.error.message.includes('not found') || uploadResult.error.message.includes('Bucket'))) {
+      const { error: createError } = await supabase.storage.createBucket(BUCKET_NAME, {
+        public: true,
+        fileSizeLimit: 10485760, // 10MB
       })
+
+      if (createError && !createError.message.includes('already exists')) {
+        console.error('Error creating bucket:', createError)
+        return NextResponse.json({ error: 'Error al crear almacenamiento' }, { status: 500 })
+      }
+
+      // Reintentar subida
+      uploadResult = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, buffer, {
+          contentType: file.type,
+          upsert: false,
+        })
+    }
+
+    if (uploadResult.error) {
+      console.error('Supabase upload error:', uploadResult.error)
+      return NextResponse.json(
+        { error: 'Error al subir archivo: ' + uploadResult.error.message },
+        { status: 500 }
+      )
     }
 
     const { data: publicData } = supabase.storage
-      .from('Smart')
+      .from(BUCKET_NAME)
       .getPublicUrl(filePath)
 
     return NextResponse.json({ url: publicData.publicUrl })
