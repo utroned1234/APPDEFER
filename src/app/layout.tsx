@@ -11,14 +11,14 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: 'https://api.dicebear.com/7.x/shapes/svg?seed=teknolapp&backgroundColor=1a1a2e&shape1Color=33e6ff&shape2Color=00d9ff&shape3Color=33e6ff',
-        type: 'image/svg+xml',
+        url: 'https://i.ibb.co/MxDtk2Bj/Chat-GPT-Image-4-feb-2026-11-24-11-a-m.png',
+        type: 'image/png',
       },
     ],
     apple: [
       {
-        url: 'https://api.dicebear.com/7.x/shapes/svg?seed=teknolapp&backgroundColor=1a1a2e&shape1Color=33e6ff&shape2Color=00d9ff&shape3Color=33e6ff',
-        type: 'image/svg+xml',
+        url: 'https://i.ibb.co/MxDtk2Bj/Chat-GPT-Image-4-feb-2026-11-24-11-a-m.png',
+        type: 'image/png',
       },
     ],
   },
