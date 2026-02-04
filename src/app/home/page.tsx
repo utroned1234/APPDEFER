@@ -88,7 +88,6 @@ export default function HomePage() {
   const [showAboutUs, setShowAboutUs] = useState(false)
   const [activating, setActivating] = useState(false)
   const [canActivate, setCanActivate] = useState(false)
-  const [unlocksAt, setUnlocksAt] = useState<string | null>(null)
   const [showConfetti, setShowConfetti] = useState(false)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
@@ -199,7 +198,6 @@ export default function HomePage() {
       if (res.ok) {
         const result = await res.json()
         setCanActivate(result.can_activate)
-        setUnlocksAt(result.unlocks_at)
       }
     } catch (error) {
       console.error('Error checking activation status:', error)
@@ -277,16 +275,14 @@ export default function HomePage() {
       const result = await res.json()
 
       if (res.status === 423) {
-        // Bloqueado
-        showToast(result.message || 'Ya activaste tus ganancias hoy', 'error')
+        // Bloqueado - ya activó, esperar nueva tarea
+        showToast(result.message || '🎉 Felicitaciones, espera tu nueva tarea', 'success')
         setCanActivate(false)
-        setUnlocksAt(result.unlocks_at)
       } else if (res.ok) {
         // Éxito - reproducir sonido
         playMoneySound()
         showToast(`¡Ganancias activadas! +Bs ${result.total_profit.toFixed(2)}`, 'success')
         setCanActivate(false)
-        setUnlocksAt(result.unlocks_at)
         // Recargar dashboard y estado de activación
         setTimeout(() => {
           fetchDashboard()
@@ -667,20 +663,10 @@ export default function HomePage() {
                     ) : canActivate ? (
                       <>💰 Activar mis ganancias diarias</>
                     ) : (
-                      <>🔒 Disponible a la 1:00 AM</>
+                      <>🎉 Felicitaciones, espera tu nueva tarea</>
                     )}
                   </span>
                 </Button>
-                {!canActivate && unlocksAt && allTasksCompleted && (
-                  <p className="text-[9px] text-center text-text-secondary mt-1">
-                    Próxima activación: {new Date(unlocksAt).toLocaleString('es-ES', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                )}
               </div>
             ) : (
               <div className="mt-2 space-y-1">
@@ -791,7 +777,7 @@ export default function HomePage() {
           </Card>
         </div>
 
-        <Card title="Bono de Esfuerzo" subtitle="Metas">
+        <Card title="Bono Red" subtitle="Metas">
           <p className="text-xs text-text-secondary text-balance text-center mb-4">
             Aquí podrás ver nuevos bonos y promociones.
           </p>
@@ -1059,12 +1045,12 @@ export default function HomePage() {
       {/* Modal de Calificación de Tarea */}
       {showTaskModal && selectedTask && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-dark-card rounded-2xl max-w-md w-full overflow-hidden">
-            <div className="relative aspect-video">
+          <div className="bg-dark-card rounded-2xl max-w-[60%] w-full overflow-hidden">
+            <div className="relative max-h-[40vh]">
               <img
                 src={selectedTask.image_url}
                 alt={`Tarea ${selectedTask.position}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain max-h-[40vh]"
               />
               <button
                 onClick={() => setShowTaskModal(false)}
