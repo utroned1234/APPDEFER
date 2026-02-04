@@ -218,56 +218,69 @@ export default function WithdrawalsPage() {
         </div>
 
         <Card glassEffect>
-          <p className="text-xs font-semibold text-gold text-center mb-4 uppercase tracking-wider">
-            💰 Montos Disponibles para Retiro
+          <p className="text-[10px] font-bold text-gold text-center mb-4 uppercase tracking-[0.2em]">
+            ⚡ Selecciona Monto (Bs) ⚡
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+          <div className="grid grid-cols-3 gap-2 mb-6">
             {allowedAmounts.map(({ amount: mont, color }) => {
               const finalAmount = calculateFinalAmount(mont)
               const isSelected = amount === mont.toString()
+
+              // Extraer colores para el borde neón
+              const colorCode = color.includes('cyan') ? '#06b6d4' :
+                color.includes('purple') ? '#a855f7' :
+                  color.includes('green') ? '#22c55e' :
+                    color.includes('orange') ? '#f97316' :
+                      color.includes('yellow') ? '#eab308' :
+                        '#6366f1';
 
               return (
                 <button
                   key={mont}
                   onClick={() => setAmount(mont.toString())}
-                  className={`relative overflow-hidden rounded-xl p-4 transition-all duration-300 transform hover:scale-105 ${isSelected
-                      ? 'ring-2 ring-gold shadow-lg shadow-gold/50'
-                      : 'hover:shadow-xl'
+                  className={`relative overflow-hidden rounded-lg p-2 transition-all duration-300 group ${isSelected
+                      ? 'bg-opacity-20 translate-y-0'
+                      : 'bg-opacity-10 hover:bg-opacity-20 hover:-translate-y-0.5'
                     }`}
                   style={{
-                    background: isSelected
-                      ? `linear-gradient(135deg, ${color.split(' ')[0].replace('from-', '#')}, ${color.split(' ')[2].replace('to-', '#')})`
-                      : 'rgba(26, 26, 46, 0.6)',
-                    border: isSelected ? '2px solid #ffd700' : '2px solid rgba(255, 215, 0, 0.2)'
+                    backgroundColor: isSelected ? `${colorCode}33` : '#0f172a',
+                    border: `1px solid ${isSelected ? colorCode : '#334155'}`,
+                    boxShadow: isSelected ? `0 0 10px ${colorCode}66` : 'none'
                   }}
                 >
-                  <div className="relative z-10">
-                    <div className="text-center space-y-2">
-                      <div className="text-2xl font-black text-white">
-                        {mont >= 1000 ? `${(mont / 1000).toFixed(1)}K` : mont}
-                      </div>
-                      <div className="text-xs text-white/80 font-medium">
-                        Bs {mont.toLocaleString('es-ES')}
-                      </div>
-                      <div className="h-px bg-white/30 my-2"></div>
-                      <div className="text-xs text-white/90 font-semibold">
-                        Recibes:
-                      </div>
-                      <div className="text-lg font-bold text-white">
-                        Bs {finalAmount.toFixed(0)}
-                      </div>
-                      <div className="text-[10px] text-white/70">
-                        (-15% desc.)
-                      </div>
+                  <div className="relative z-10 flex flex-col items-center justify-center space-y-1">
+                    {/* Monto Principal */}
+                    <div
+                      className="text-sm font-black tracking-tighter"
+                      style={{ color: isSelected ? '#fff' : colorCode }}
+                    >
+                      {mont >= 1000 ? `${(mont / 1000)}k` : mont}
+                    </div>
+
+                    {/* Línea divisoria futurista */}
+                    <div
+                      className="w-full h-[1px] opacity-30"
+                      style={{ background: `linear-gradient(90deg, transparent, ${colorCode}, transparent)` }}
+                    />
+
+                    {/* Monto Final Compacto */}
+                    <div className="flex flex-col items-center">
+                      <span className="text-[8px] text-gray-400 uppercase">Recibes</span>
+                      <span className="text-xs font-bold text-white leading-none">
+                        {finalAmount.toFixed(0)}
+                      </span>
                     </div>
                   </div>
-                  {isSelected && (
-                    <div className="absolute top-2 right-2">
-                      <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
-                        <span className="text-black text-xs font-bold">✓</span>
-                      </div>
-                    </div>
-                  )}
+
+                  {/* Esquina decorativa (tech accent) */}
+                  <div
+                    className="absolute top-0 right-0 w-2 h-2 border-t border-r opacity-50"
+                    style={{ borderColor: colorCode }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 w-2 h-2 border-b border-l opacity-50"
+                    style={{ borderColor: colorCode }}
+                  />
                 </button>
               )
             })}
