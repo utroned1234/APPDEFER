@@ -39,12 +39,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Intentar subir
-    let uploadResult = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false,
-      })
+    let uploadResult
+    try {
+      uploadResult = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, buffer, {
+          contentType: file.type,
+          upsert: false,
+        })
+    } catch (uploadError: any) {
+      console.error('Supabase upload exception:', uploadError)
+      const msg = uploadError?.message || String(uploadError)
+      if (msg.includes('JWS') || msg.includes('JWT') || msg.includes('token')) {
+        return NextResponse.json(
+          { error: 'Error de configuración: Verifica SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en Render' },
+          { status: 500 }
+        )
+      }
+      return NextResponse.json({ error: 'Error al subir archivo: ' + msg }, { status: 500 })
+    }
 
     // Si el bucket no existe, intentar crearlo
     if (uploadResult.error && (uploadResult.error.message.includes('not found') || uploadResult.error.message.includes('Bucket'))) {

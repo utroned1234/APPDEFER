@@ -184,10 +184,7 @@ export default function AdminPage() {
   useEffect(() => {
     // Get token only on client side
     if (typeof window !== 'undefined') {
-      const cookieToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('auth_token='))
-        ?.split('=')[1] || ''
+      const cookieToken = document.cookie.match(/auth_token=([^;]+)/)?.[1] || ''
       setToken(cookieToken)
     }
   }, [])
