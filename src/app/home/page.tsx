@@ -186,6 +186,7 @@ export default function HomePage() {
         fetchDailyTasks()
         if (result.all_completed) {
           setAllTasksCompleted(true)
+          checkActivationStatus()
         }
       } else {
         showToast(result.error || 'Error al completar tarea', 'error')
