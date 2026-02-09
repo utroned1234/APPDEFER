@@ -43,10 +43,10 @@ export async function POST(req: NextRequest) {
     const { amount_bs, bank_name, qr_image_url, payout_method, phone_number } = await req.json()
 
     // Validar montos exactos permitidos
-    const allowedAmounts = [10, 50, 100, 200, 500, 1000]
+    const allowedAmounts = [50, 300, 700, 1500, 2500, 5000]
     if (!amount_bs || !allowedAmounts.includes(amount_bs)) {
       return NextResponse.json(
-        { error: 'Solo se permiten retiros en montos exactos: 10, 50, 100, 200, 500 o 1000 Bs' },
+        { error: 'Solo se permiten retiros en montos exactos: 50, 300, 700, 2500, 2500 o 5000 Bs' },
         { status: 400 }
       )
     }
